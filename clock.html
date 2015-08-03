@@ -1,14 +1,99 @@
 <!DOCTYPE html>
 <html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<style>
+	body {
+		padding-top: 60px;
+	}
+	</style>
+</head>
 <body>
 
-<script src="clock.js"></script>
+	<script src="clock.js"></script>
 
-<p>Click the button to display a random number.</p>
 
-<button onclick="generatePlay()">Try it</button>
+	<div class="container">
+		<div class="page-header">
+  			<h1>Football time!</h1>
+  			<h4>Study tool for NCAA timing rules</h4>
+		</div>
+		<div class="row" style="margin-top: 20px">
+			<div class="col-md-2" style="text-align:center;">
+				<p>Click the button below to display a random play.</p>
+				<button type="button" class="btn btn-info" onclick="generatePlay()">Hike!</button>
+			</div>
+			<div class="col-md-10" id = "demo">
 
-<p id="demo"></p>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 20px; margin-bottom: 20px; border: #cdcdcd medium solid; border-radius: 10px;">
+			<div class="col-md-4">
+				Fouls by:
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" value="" id="aFoul">
+						Team A
+					</label>
+				</div>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" value="" id="bFoul">
+						Team B
+					</label>
+				</div>	
+			</div>
+			<div class="col-md-4">
+				Runoff option:
+				<div class="radio">
+					<label>
+						<input type="radio" name="optionsRadios" id="noRunoff">
+						No runoff
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="optionsRadios" id="aRunoff" >
+						Team A can elect a 10-second runoff
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="optionsRadios" id="bRunoff">
+						Team B can elect a 10-second runoff
+					</label>
+				</div>	
+			</div>
+			<div class="col-md-4">
+				Play clock:
+				<div class="radio">
+					<label>
+						<input type="radio" name="playRadios" id="25clock" >
+						25 seconds
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="playRadios" id="40clock" >
+						40 seconds
+					</label>
+				</div>
+
+			</div>
+		</div>
+		<div>
+			<button type="button" class="btn btn-info" onclick="gradeAnswers()">Check answers</button>
+		</div>
+		<div id="answer" style="padding-top: 20px; text-align:center">
+		</div>
+		<div id="debug" style="padding-top: 80px; text-align:center">
+		</div>
+
+	</div>
+
+
 
 </body>
 </html>

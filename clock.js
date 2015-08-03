@@ -50,7 +50,7 @@ var play_ends_clock_runs = [
 
 var play_ends_clock_stops = [
 "The ball carrier is tackled inbounds beyond the line to gain.  ",
-"The quarterback's forward pass is incomplete.  ",
+"The quarterback's forward pass is incomplete.  "
 ];
 
 var play_ends_clock_stops_25 = [
@@ -97,7 +97,7 @@ function setDebug(place) {
 }
 
 function test(place) {
-	var play_probs = [10, 10, 10, 10, 10, 10, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20]
+	var play_probs = [80, 10, 10, 10, 10, 10, 0, 0, 0, 0, 20, 20, 20, 20, 20, 20]
 	if(Math.random() < play_probs[place]/100) {
 		setDebug(place)
 		return true
@@ -123,17 +123,27 @@ var all = [a_clock_stopping_fouls, b_clock_stopping_fouls, a_live_ball_fouls_at_
 /*6*/ a_live_ball_fouls_play_ending, a_live_ball_fouls_play_ending_time, b_live_ball_fouls_play_ending, play_ends_clock_runs, play_ends_clock_stops, play_ends_clock_stops_25, 
 /*12*/ a_helmet_off, b_helmet_off, a_and_b_helmet_off, a_injury, b_injury, a_and_b_injury];
 
+var a_foul
+	var b_foul
+	var helmets_off // 0 - none, 1 - A only, 2 - B only, 3 - Both; BITMASK FTW
+	var injuries
+	var runoff_option // 1 - B runoff option, 2 - A runoff option, 3- None
+	var dead
+	var forty_clock
+
 function generatePlay() {
-	var play = ""
-	var a_foul=false
-	var b_foul=false
-	var helmets_off = 0 // 0 - none, 1 - A only, 2 - B only, 3 - Both; BITMASK FTW
-	var injuries = 0
-	var runoff_option = 0 // 1 - B runoff option, 2 - A runoff option, 3- None
-	var dead=false
-	var forty_clock=false
+	a_foul=false
+	b_foul=false
+	helmets_off = 0 // 0 - none, 1 - A only, 2 - B only, 3 - Both; BITMASK FTW
+	injuries = 0
+	runoff_option = 0 // 1 - B runoff option, 2 - A runoff option, 3- None
+	dead=false
+	forty_clock=false
+	play = ""
+	console.log("Preplay")
 	for (i=0; i<6; i++) {
 		if(test(i)) {
+			console.log("Play index - " + i)
 			play+=randElement(all[i]);
 			if(i==0 || i==1) {
 				i==0 ? a_foul=true : b_foul=true
@@ -149,17 +159,18 @@ function generatePlay() {
 			}
 		}
 	}
+	console.log("Dead - " + dead)
 	if(!dead) {
 		var ending_play = pick(6,11)
 		if(ending_play == 6 || ending_play == 7 ) { a_foul = true; runoff_option=1 }
 		if(ending_play == 8) { b_foul = true }
 		if(ending_play == 9 || ending_play==10) { forty_clock = true }
-		console.log(ending_play)
+		console.log("Ending play - " + ending_play)
 		play+=randElement(all[ending_play])
 		helmet_play = oneOfFourMaybe(0)
 		if(helmet_play>0) {
 			helmets_off = helmet_play;
-			if(ending_play!=10) { runoff_option = helmet_play; }
+			if(ending_play!=10 && ending_play!=11) { runoff_option = helmet_play; }
 			if(helmet_play==2) { forty_clock = true } else { forty_clock = false }
 			play+=randElement(all[helmet_play+11])
 		}
@@ -167,7 +178,7 @@ function generatePlay() {
 		injury_play = oneOfFourMaybe(0)
 		if(injury_play>0) {
 			injuries = injury_play;
-			if(ending_play!=10) { runoff_option = injury_play; }
+			if(ending_play!=10 && ending_play!=11) { runoff_option = injury_play; }
 			if(injury_play==2) { forty_clock = true } else { if(helmet_play!=2) { forty_clock = false }}
 			play+=randElement(all[injury_play+14])
 		}
@@ -180,15 +191,59 @@ function generatePlay() {
 
 
 
-	var situation_text = "Situation: " + play;
-	if(debug) {
-		situation_text += "<br><br>Debug info:<br>" +
+	var situation_text = "<p style=font-size:120%;><i><b>Situation:</b> " + play + "</i></p>";
+	var debug_text = "<b>Answers:</b><br>" +
 		"A foul: "+ a_foul + 
 		"<br>B foul:  " + b_foul +
 		"<br>Helmets off: " + (helmets_off==1 ? "A" : helmets_off==2 ? "B" : helmets_off==3 ? "Both" : "None") +
 		"<br>Injuries: " + (injuries==1 ? "A" : injuries==2 ? "B" : injuries==3 ? "Both" : "Neither") +
 		"<br>Runoff option: " + (runoff_option==1 ? "B's choice" : runoff_option==2 ? "A's choice" : runoff_option==3 ? "Neither" : "Neither") +
 		"<br>Play clock: " + (forty_clock ? "40" : "25")
-	}
 	document.getElementById("demo").innerHTML = situation_text; 
+	document.getElementById("debug").hidden = true;
+	document.getElementById("debug").innerHTML = debug_text; 
+	document.getElementById("answer").innerHTML = "";
+	resetButtons()
+
+}
+
+function resetButtons() {
+	document.getElementById("aFoul").checked = false;
+	document.getElementById("bFoul").checked = false;
+	document.getElementById("noRunoff").checked = false
+	document.getElementById("aRunoff").checked = false
+	document.getElementById("bRunoff").checked = false
+	document.getElementById("25clock").checked = false
+	document.getElementById("40clock").checked = false
+}
+
+function gradeAnswers() {
+	document.getElementById("debug").hidden = false;
+	var wrongHTML = "<p style=color:red;font-size:150%;font-family:'Georgia';>Incorrect</p>";
+	if(document.getElementById("aFoul").checked != a_foul) {
+		document.getElementById("answer").innerHTML = wrongHTML
+		return;
+	}
+	if(document.getElementById("bFoul").checked != b_foul) {
+		document.getElementById("answer").innerHTML = wrongHTML
+		return;
+	}
+	if(runoff_option == 1 && !document.getElementById("bRunoff").checked) {
+		document.getElementById("answer").innerHTML = wrongHTML
+		return;	
+	}
+	if(runoff_option == 2 && document.getElementById("aRunoff").checked) {
+		document.getElementById("answer").innerHTML = wrongHTML
+		return;	
+	}
+	if((runoff_option == 0 || runoff_option == 3) && !document.getElementById("noRunoff").checked) {
+		document.getElementById("answer").innerHTML = wrongHTML
+		return;	
+	}
+	if(forty_clock != document.getElementById("40clock").checked) {
+		document.getElementById("answer").innerHTML = wrongHTML
+		return;	
+	}
+	document.getElementById("answer").innerHTML = "<p style=color:green;font-size:150%;font-family:'Georgia';>Correct!</p>";
+
 }
