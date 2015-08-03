@@ -29,7 +29,14 @@ var b_live_ball_fouls = [
 ]
 
 var a_live_ball_fouls_play_ending = [
-"As he is about to be tackled near the sideline, ball carrier A22 throws the ball backward and out of bounds to stop the clock.  "
+"QB A22 throws an illegal forward pass to A9 who is tackled short of the line to gain.  ",
+"QB A22 throws an illegal forward pass to A9 who is tackled beyond of the line to gain.  "
+]
+
+var a_live_ball_fouls_play_ending_time = [
+"As he is about to be tackled near the sideline, ball carrier A22 throws the ball backward and out of bounds to stop the clock.  ",
+"QB A22 throws an illegal forward pass which falls incomplete beyond the neutral zone.  ",
+"QB A22 throws an illegal forward pass which falls incomplete behind the neutral zone.  "
 ];
 
 var b_live_ball_fouls_play_ending = [
@@ -43,8 +50,13 @@ var play_ends_clock_runs = [
 
 var play_ends_clock_stops = [
 "The ball carrier is tackled inbounds beyond the line to gain.  ",
-"The quarterback's forward pass is incomplete.  "
+"The quarterback's forward pass is incomplete.  ",
 ];
+
+var play_ends_clock_stops_25 = [
+"Team A's punt is short and is recovered behind the neutral zone by A34 who is immediately tackled.  ",
+"A2's pass is intercepted at the 50 by B54, who runs for a short gain then is tackled.  "
+]
 
 var a_helmet_off = [
 "During the play A66's helmet comes off.  ",
@@ -93,10 +105,10 @@ function test(place) {
 	return false
 }
 
-function oneOfThreeMaybe(place) {
+function oneOfFourMaybe(place) {
 	var play_probs = [80, 80]
 	if(Math.random() < play_probs[place]/100) {
-		return pick(1,3)
+		return pick(0,3)
 	}
 	return 0
 }
@@ -108,21 +120,24 @@ function pick(min, max) {
 }
 
 var all = [a_clock_stopping_fouls, b_clock_stopping_fouls, a_live_ball_fouls_at_snap, b_live_ball_fouls_at_snap, a_live_ball_fouls, b_live_ball_fouls, 
-/*6*/ a_live_ball_fouls_play_ending, b_live_ball_fouls_play_ending, play_ends_clock_runs, play_ends_clock_stops, 
-/*10*/ a_helmet_off, b_helmet_off, a_and_b_helmet_off, a_injury, b_injury, a_and_b_injury];
+/*6*/ a_live_ball_fouls_play_ending, a_live_ball_fouls_play_ending_time, b_live_ball_fouls_play_ending, play_ends_clock_runs, play_ends_clock_stops, play_ends_clock_stops_25, 
+/*12*/ a_helmet_off, b_helmet_off, a_and_b_helmet_off, a_injury, b_injury, a_and_b_injury];
 
 function generatePlay() {
 	var play = ""
 	var a_foul=false
 	var b_foul=false
-	var helmets_off = 0; // 0 - none, 1 - A only, 2 - B only, 3 - Both; BITMASK FTW
-	var injuries = 0;
+	var helmets_off = 0 // 0 - none, 1 - A only, 2 - B only, 3 - Both; BITMASK FTW
+	var injuries = 0
+	var runoff_option = 0 // 1 - B runoff option, 2 - A runoff option, 3- None
 	var dead=false
+	var forty_clock=false
 	for (i=0; i<6; i++) {
 		if(test(i)) {
 			play+=randElement(all[i]);
 			if(i==0 || i==1) {
 				i==0 ? a_foul=true : b_foul=true
+				i==0 ? runoff_option=1 : runoff_option=2
 				dead=true
 				break
 			}
@@ -135,20 +150,31 @@ function generatePlay() {
 		}
 	}
 	if(!dead) {
-		var ending_play = pick(6,9)
-		if(ending_play == 6) { a_foul = true }
-		if(ending_play == 7) { b_foul = true }
+		var ending_play = pick(6,11)
+		if(ending_play == 6 || ending_play == 7 ) { a_foul = true; runoff_option=1 }
+		if(ending_play == 8) { b_foul = true }
+		if(ending_play == 9 || ending_play==10) { forty_clock = true }
+		console.log(ending_play)
 		play+=randElement(all[ending_play])
-		helmet_play = oneOfThreeMaybe(0)
+		helmet_play = oneOfFourMaybe(0)
 		if(helmet_play>0) {
 			helmets_off = helmet_play;
-			play+=randElement(all[helmet_play+9])
+			if(ending_play!=10) { runoff_option = helmet_play; }
+			if(helmet_play==2) { forty_clock = true } else { forty_clock = false }
+			play+=randElement(all[helmet_play+11])
 		}
-		injury_play = oneOfThreeMaybe(0)
+		console.log(helmet_play)
+		injury_play = oneOfFourMaybe(0)
 		if(injury_play>0) {
 			injuries = injury_play;
-			play+=randElement(all[injury_play+12])
+			if(ending_play!=10) { runoff_option = injury_play; }
+			if(injury_play==2) { forty_clock = true } else { if(helmet_play!=2) { forty_clock = false }}
+			play+=randElement(all[injury_play+14])
 		}
+		console.log(injury_play)
+		//Opposing actions = no runoff
+		if(injury_play + helmet_play == 3 || injury_play == 3 || helmet_play == 3) { runoff_option = false }
+		if(a_foul || b_foul) { runoff_option = false }
 	}
 	
 
@@ -159,8 +185,10 @@ function generatePlay() {
 		situation_text += "<br><br>Debug info:<br>" +
 		"A foul: "+ a_foul + 
 		"<br>B foul:  " + b_foul +
-		"<br>Helmets off: " + (helmets_off==1 ? "A" : helmets_off==2 ? "B" : "Both") +
-		"<br>Injuries: " + (injuries==1 ? "A" : injuries==2 ? "B" : "Both")
+		"<br>Helmets off: " + (helmets_off==1 ? "A" : helmets_off==2 ? "B" : helmets_off==3 ? "Both" : "None") +
+		"<br>Injuries: " + (injuries==1 ? "A" : injuries==2 ? "B" : injuries==3 ? "Both" : "Neither") +
+		"<br>Runoff option: " + (runoff_option==1 ? "B's choice" : runoff_option==2 ? "A's choice" : runoff_option==3 ? "Neither" : "Neither") +
+		"<br>Play clock: " + (forty_clock ? "40" : "25")
 	}
 	document.getElementById("demo").innerHTML = situation_text; 
 }
