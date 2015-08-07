@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Football time</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -17,8 +18,9 @@
 
 	<div class="container">
 		<div class="page-header">
-  			<h1>Football time!</h1>
-  			<h4>Study tool for NCAA timing rules</h4>
+  			<h1>Football time</h1>
+  			<h5>Study tool for NCAA timing rules</h5>
+  			<h6>For each play, assume the game clock is running with less than one minute in the half when the ball is snapped, helmets coming off are not the result of a foul, and runoffs are always accepted.</h6>
 		</div>
 		<div class="row" style="margin-top: 20px">
 			<div class="col-md-2" style="text-align:center;">
@@ -30,7 +32,7 @@
 			</div>
 		</div>
 		<div class="row" style="margin-top: 20px; margin-bottom: 20px; border: #cdcdcd medium solid; border-radius: 10px;">
-			<div class="col-md-4">
+			<div class="col-md-3">
 				Fouls by:
 				<div class="checkbox">
 					<label>
@@ -45,7 +47,7 @@
 					</label>
 				</div>	
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				Runoff option:
 				<div class="radio">
 					<label>
@@ -66,7 +68,7 @@
 					</label>
 				</div>	
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				Play clock:
 				<div class="radio">
 					<label>
@@ -78,6 +80,28 @@
 					<label>
 						<input type="radio" name="playRadios" id="40clock" >
 						40 seconds
+					</label>
+				</div>
+
+			</div>
+			<div class="col-md-3">
+				Clock starts on:
+				<div class="radio">
+					<label>
+						<input type="radio" name="clockRadios" id="readyClock" >
+						Ready
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="clockRadios" id="snapClock" >
+						Snap
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input type="radio" name="clockRadios" id="runningClock" >
+						Running
 					</label>
 				</div>
 
