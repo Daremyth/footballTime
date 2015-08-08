@@ -313,6 +313,7 @@ function generatePlay() {
 		//Forty clock only set if there are no fouls
 		forty_clock = (ending_play.clock==40 && !a_foul && !b_foul)
 		ready_snap = ending_play.start
+		if(ready_snap == 2 && (a_foul || b_foul)) { ready_snap = 0 }
 		
 		if(helmet_play || injury_play) {
 			if(helmet_play) {
