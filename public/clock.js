@@ -36,77 +36,92 @@ var endingPlays = [
 	 runoff: 0,
 	 clock: 25,
 	 foul: 1,
-	 start: 0},
+	 start: 0,
+	 cop: 0},
 	 {text: "QB A22 throws an illegal forward pass to A9 who is tackled beyond of the line to gain.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 1,
-	 start: 0},
+	 start: 0,
+	 cop: 0},
 	 {text: "As he is about to be tackled near the sideline, ball carrier A22 throws the ball backward and out of bounds to stop the clock.  ",
 	 runoff: 1,
 	 clock: 25,
 	 foul: 1,
-	 start: 0},
+	 start: 0,
+	 cop: 0},
 	 {text: "QB A22 throws an illegal forward pass which falls incomplete beyond the neutral zone.  ",
 	 runoff: 1,
 	 clock: 25,
 	 foul: 1,
-	 start: 1},
+	 start: 1,
+	 cop: 0},
 	 {text: "QB A22 throws an illegal forward pass which falls incomplete behind the neutral zone.  ",
 	 runoff: 1,
 	 clock: 25,
 	 foul: 1,
-	 start: 1},
+	 start: 1,
+	 cop: 0},
 	 {text: "A22 is tackled by the facemask short of the line to gain.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 2,
-	 start: 0},
+	 start: 0,
+	 cop: 0},
 	 {text: "A22 is tackled by the facemask beyond the line to gain.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 2,
-	 start: 0},
+	 start: 0,
+	 cop: 0},
 	 {text: "The ball carrier is tackled inbounds short of the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
-	 start: 2},
+	 start: 2,
+	 cop: 0},
 	 {text: "The ball carrier is tackled inbounds short of the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
-	 start: 2},
+	 start: 2,
+	 cop: 0},
 	 {text: "The ball carrier is tackled inbounds beyond the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
-	 start: 0},
+	 start: 0,
+	 cop: 0},
 	 {text: "The ball carrier is tackled inbounds beyond the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
-	 start: 0},
+	 start: 0,
+	 cop: 0},
 	 {text: "The quarterback's forward pass is incomplete.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
-	 start: 1},
+	 start: 1,
+	 cop: 0},
 	 {text: "The quarterback's forward pass is incomplete.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
-	 start: 1},
+	 start: 1,
+	 cop: 0},
 	 {text: "Team A's punt is short and is recovered behind the neutral zone by A34 who is immediately tackled.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
-	 start: 1},
+	 start: 1,
+	 cop: 0},
 	 {text: "A2's pass is intercepted at the 50 by B54, who runs for a short gain then is tackled.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
-	 start: 1}
+	 start: 1,
+	 cop: 1}
 
 
 ]
@@ -171,6 +186,10 @@ var CFOPlays = [
 [-1,-1,-1,-1,-1,-1,10,3,3]
 ]
 
+var orgPlays = [
+[]
+]
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -233,6 +252,7 @@ var forty_clock
 var ready_snap 
 
 function generatePlay() {
+	_gaq.push(['_trackEvent', 'button', 'pushed'])
 	var param = getParameterByName("play")
 	if(param != "") {
 		var storedPlays = param.replace(/\s+/g, '').split(',');
@@ -310,11 +330,13 @@ function generatePlay() {
 		b_foul = b_foul || (ending_play.foul == 2)
 		runoff_option = ending_play.runoff
 		if(a_foul && b_foul) { runoff_option = 0 }
+
 		//Forty clock only set if there are no fouls
 		forty_clock = (ending_play.clock==40 && !a_foul && !b_foul)
 		ready_snap = ending_play.start
 		if(ready_snap == 2 && (a_foul || b_foul)) { ready_snap = 0 }
-		
+		if(ending_play.cop && b_foul && ready_snap == 1) { ready_snap = 0 }
+
 		if(helmet_play || injury_play) {
 			if(helmet_play) {
 				helmets_off = helmet_play;
