@@ -3,11 +3,13 @@ var debug=true;
 var a_clock_stopping_fouls = [
 "Guard A63 in a three-point stance lifts his hand from the ground prior to the snap.  ",
 "As Team A breaks its huddle, A22 and A33 continue in motion laterally as their teammates all stop and set into their positions. A22 comes to a stop but A33 continues his motion at the snap. All eleven players are never set for one second before the ball is snapped.  ",
-"A substitute enters Team A's huddle, and no teammate leaves the field. Then Team A breaks the huddle with 12 players.  "
+"A substitute enters Team A's huddle, and no teammate leaves the field. Then Team A breaks the huddle with 12 players.  ",
+"Team A commits a delay of game foul"
 ];
 
 var b_clock_stopping_fouls = [
-"Defensive tackle B77 jumps into the neutral zone and makes contact with an opponent.  "
+"Defensive tackle B77 jumps into the neutral zone and makes contact with an opponent.  ",
+"B66 jumps through the neutral zone and is moving unabated toward the QB as the ball is snapped.  "
 ]
 
 var a_live_ball_fouls_at_snap =  [
@@ -17,7 +19,8 @@ var a_live_ball_fouls_at_snap =  [
 
 var b_live_ball_fouls_at_snap = [
 "B77 is lined up in the neutral zone at the snap but does not make contact.  ",
-"Defensive tackle B73 is flagged for being in the neutral zone at the snap.  "
+"Defensive tackle B73 is flagged for being in the neutral zone at the snap.  ",
+"Team B has 12 men on the field at the snap.  "
 ];
 
 var a_live_ball_fouls = [
@@ -25,7 +28,9 @@ var a_live_ball_fouls = [
 ];
 
 var b_live_ball_fouls = [
-"Defensive tackle B73 is flagged for holding.  "
+"Defensive tackle B73 is flagged for holding.  ",
+"Safety B12 commits defensive pass interference.  ",
+"B65 commits a personal foul (hands to the face) during the down.  "
 ]
 
 //Runoff: 0 - none, 1 - B's option, 2 - A's option
@@ -121,8 +126,43 @@ var endingPlays = [
 	 clock: 25,
 	 foul: 0,
 	 start: 1,
-	 cop: 1}
-
+	 cop: 1},
+	 {text: "B89 intercepts the pass and is tackled at the 50 yard line.  ",
+	 runoff: 0,
+	 clock: 25,
+	 foul: 0,
+	 start: 1,
+	 cop: 1},
+	 {text: "A32 is tackled for no gain.  ",
+	 runoff: 0,
+	 clock: 40,
+	 foul: 0,
+	 start: 2,
+	 cop: 0},
+	 {text: "Runner A22 fumbles the ball at the 50 yard line and it goes out of bounds at the B45 yard line.  ",
+	 runoff: 0,
+	 clock: 40,
+	 foul: 0,
+	 start: 0,
+	 cop: 0},
+	 {text: "B35 intercepts a pass and returns it for a touchdown.  ",
+	 runoff: 0,
+	 clock: 25,
+	 foul: 0,
+	 start: 1,
+	 cop: 1},
+	 {text: "B35 intercepts a pass and is tackled at the A-20.  ",
+	 runoff: 0,
+	 clock: 25,
+	 foul: 0,
+	 start: 0,
+	 cop: 1},
+	 {text: "A22 runs out of bounds short of the line to gain.  ",
+	 runoff: 0,
+	 clock: 40,
+	 foul: 0,
+	 start: 1,
+	 cop: 0}
 
 ]
 
@@ -154,6 +194,7 @@ var injury_plays = [
 ]
 
 var runner = getParameterByName("runner")
+var orgRunner = getParameterByName("theOrg")
 var runCount = 0
 
 var CFOPlays = [
@@ -187,7 +228,22 @@ var CFOPlays = [
 ]
 
 var orgPlays = [
-[]
+[-1,-1,-1,-1,-1,1,15,3],
+[-1,-1,1,0,-1,-1,16,-1,3],
+[-1,-1,-1,-1,-1,-1,0],
+[-1,-1,-1,-1,-1,-1,5],
+[-1,-1,-1,-1,-1,-1,12,-1,4],
+[-1,-1,-1,2,-1,-1,17],
+[-1,-1,-1,-1,-1,2,18,-1,3],
+[0,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,8,-1,0],
+[2,-1,-1,-1,-1,-1],
+[3,-1,-1,-1,-1,-1],
+[-1,1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,1,19,-1,3],
+[-1,-1,-1,-1,-1,-1,20,3,-1],
+[-1,-1,-1,-1,-1,-1,16,-1,0],
+[-1,-1,-1,-1,-1,-1,12,-1,3]
 ]
 
 function getParameterByName(name) {
@@ -266,6 +322,11 @@ function generatePlay() {
 		runCount++
 		if(runCount>=27) { runCount = 0 }
 	}
+	if(orgRunner=="true") {
+		storedPlays = orgPlays[runCount]
+		runCount++
+		if(runCount>=16) { runCount = 0 }
+	}
 	a_foul=false
 	b_foul=false
 	helmets_off = 0 // 0 - none, 1 - A only, 2 - B only, 3 - Both
@@ -313,7 +374,7 @@ function generatePlay() {
 			}
 		}
 	}
-	console.log("Dead - " + dead)
+
 	if(!dead) {
 		var ending_play, helmet_play, injury_play
 		if(storedPlays.length>0) {
