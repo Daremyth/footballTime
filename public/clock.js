@@ -288,6 +288,10 @@ function randElement(array, place) {
 	return array[pick]
 }
 
+function randElementOnly(array) {
+	return array[Math.floor(Math.random() * array.length)]
+}
+
 function randElementMaybe(array, chance, place) {
 	if(Math.random() > chance/100) { 
 		place = typeof place !== 'undefined' ? place : -1;
@@ -334,6 +338,7 @@ var runoff_option // 1 - B runoff option, 2 - A runoff option, 3- None
 var dead
 var forty_clock
 var ready_snap 
+var cfoPick
 
 function generatePlay() {
 	_gaq.push(['_trackEvent', 'button', 'pushed'])
@@ -355,10 +360,17 @@ function generatePlay() {
 		runCount++
 		if(runCount>=16) { runCount = 0 }
 	}
+	if(document.getElementById("cfoOnly").checked) {
+		cfoPick = Math.floor(Math.random() * CFOPlays.length)
+		storedPlays = CFOPlays[cfoPick]
+		cfoPick++
+		console.log("CFO bulletin play " + cfoPick)
+
+	}
 	a_foul=false
 	b_foul=false
-	helmets_off = 0 // 0 - none, 1 - A only, 2 - B only, 3 - Both
-	injuries = 0
+	helmets_off = null // 0 - none, 1 - A only, 2 - B only, 3 - Both
+	injuries = null
 	runoff_option = 0 // 1 - B runoff option, 2 - A runoff option, 3- None
 	dead=false
 	forty_clock=false
@@ -507,12 +519,14 @@ function generatePlay() {
 	var debug_text = "<b>Answers:</b><br>" +
 		"A foul: "+ a_foul + 
 		"<br>B foul:  " + b_foul +
-		"<br>Helmets off: " + (helmets_off==1 ? "A" : helmets_off==2 ? "B" : helmets_off==3 ? "Both" : "None") +
-		"<br>Injuries: " + (injuries==1 ? "A" : injuries==2 ? "B" : injuries==3 ? "Both" : "Neither") +
+		"<br>Helmets off: " + (helmets_off == null ? "None" : (helmets_off.team==0 ? "A" : helmets_off.team==1 ? "B" : "Both" )) +
+		"<br>Injuries: " + (injuries == null ? "None" : (injuries.team==0 ? "A" : injuries.team==1 ? "B" : "Both" )) +
 		"<br>Runoff option: " + (runoff_option==1 ? "B's choice" : runoff_option==2 ? "A's choice" : runoff_option==3 ? "Neither" : "Neither") +
 		"<br>Play clock: " + (forty_clock ? "40" : "25") +
-		"<br>Clock starts on: " + (ready_snap==0 ? "Ready" : ready_snap==1 ? "Snap" : ready_snap == 2 ? "Running" : "After free kick") +
-		"<br>Debug info: " + pick_debug
+		"<br>Clock starts on: " + (ready_snap==0 ? "Ready" : ready_snap==1 ? "Snap" : ready_snap == 2 ? "Running" : "After free kick") 
+		if(document.getElementById("cfoOnly").checked) {
+			debug_text += "<br>CFO bulletin play #" + cfoPick 
+		}
 	document.getElementById("demo").innerHTML = situation_text; 
 	document.getElementById("debug").hidden = true;
 	document.getElementById("debug").innerHTML = debug_text; 
