@@ -511,7 +511,7 @@ function generatePlay() {
 		"<br>Injuries: " + (injuries==1 ? "A" : injuries==2 ? "B" : injuries==3 ? "Both" : "Neither") +
 		"<br>Runoff option: " + (runoff_option==1 ? "B's choice" : runoff_option==2 ? "A's choice" : runoff_option==3 ? "Neither" : "Neither") +
 		"<br>Play clock: " + (forty_clock ? "40" : "25") +
-		"<br>Clock starts on: " + (ready_snap==0 ? "Ready" : ready_snap==1 ? "Snap" : "Running") +
+		"<br>Clock starts on: " + (ready_snap==0 ? "Ready" : ready_snap==1 ? "Snap" : ready_snap == 2 ? "Running" : "After free kick") +
 		"<br>Debug info: " + pick_debug
 	document.getElementById("demo").innerHTML = situation_text; 
 	document.getElementById("debug").hidden = true;
