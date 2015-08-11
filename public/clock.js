@@ -42,127 +42,155 @@ var endingPlays = [
 	 clock: 25,
 	 foul: 1,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "QB A22 throws an illegal forward pass to A9 who is tackled beyond of the line to gain.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 1,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "As he is about to be tackled near the sideline, ball carrier A22 throws the ball backward and out of bounds to stop the clock.  ",
 	 runoff: 1,
 	 clock: 25,
 	 foul: 1,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "QB A22 throws an illegal forward pass which falls incomplete beyond the neutral zone.  ",
 	 runoff: 1,
 	 clock: 25,
 	 foul: 1,
 	 start: 1,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "QB A22 throws an illegal forward pass which falls incomplete behind the neutral zone.  ",
 	 runoff: 1,
 	 clock: 25,
 	 foul: 1,
 	 start: 1,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "A22 is tackled by the facemask short of the line to gain.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 2,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "A22 is tackled by the facemask beyond the line to gain.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 2,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "The ball carrier is tackled inbounds short of the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 2,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "The ball carrier is tackled inbounds short of the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 2,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "The ball carrier is tackled inbounds beyond the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "The ball carrier is tackled inbounds beyond the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "The quarterback's forward pass is incomplete.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 1,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "The quarterback's forward pass is incomplete.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 1,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "Team A's punt is short and is recovered behind the neutral zone by A34 who is immediately tackled.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
 	 start: 1,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "A2's pass is intercepted at the 50 by B54, who runs for a short gain then is tackled.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
 	 start: 1,
-	 cop: 1},
+	 cop: 1,
+	 score: 0},
 	 {text: "B89 intercepts the pass and is tackled at the 50 yard line.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
 	 start: 1,
-	 cop: 1},
+	 cop: 1,
+	 score: 0},
 	 {text: "A32 is tackled for no gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 2,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "Runner A22 fumbles the ball at the 50 yard line and it goes out of bounds at the B45 yard line.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 0,
-	 cop: 0},
+	 cop: 0,
+	 score: 0},
 	 {text: "B35 intercepts a pass and returns it for a touchdown.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
 	 start: 1,
-	 cop: 1},
+	 cop: 1,
+	 score: 1},
 	 {text: "B35 intercepts a pass and is tackled at the A-20.  ",
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
 	 start: 0,
-	 cop: 1},
+	 cop: 1,
+	 score: 0},
 	 {text: "A22 runs out of bounds short of the line to gain.  ",
 	 runoff: 0,
 	 clock: 40,
 	 foul: 0,
 	 start: 1,
-	 cop: 0}
+	 cop: 0,
+	 score: 0},
+	 {text: "A22 runs for a touchdown.  ",
+	 runoff: 0,
+	 clock: 25,
+	 foul: 0,
+	 start: 3,
+	 cop: 0,
+	 score: 1}
 
 ]
 
@@ -398,6 +426,29 @@ function generatePlay() {
 		if(ready_snap == 2 && (a_foul || b_foul)) { ready_snap = 0 }
 		if(ending_play.cop && b_foul && ready_snap == 1) { ready_snap = 0 }
 
+		//We have a scoring play
+		if(ending_play.score == 1) {
+			//B scored
+			if(ending_play.cop == 1) {
+				//Score stands if they didn't foul
+				if(!b_foul) {
+					ready_snap = 3
+				} else {
+					//Otherwise, down is repeated and starts on snap
+					ready_snap = 1
+				}
+			} else {
+				//A scored
+				if(!a_foul) {
+					//And they didn't foul!
+					ready_snap = 3
+				} else {
+					//A fouled, no score, start on snap
+					ready_snap = 1
+				}
+			}
+		}
+
 		if(helmet_play || injury_play) {
 			if(helmet_play) {
 				helmets_off = helmet_play;
@@ -481,6 +532,7 @@ function resetButtons() {
 	document.getElementById("readyClock").checked = false
 	document.getElementById("snapClock").checked = false
 	document.getElementById("runningClock").checked = false
+	document.getElementById("freeKickClock").checked = false
 }
 
 function gradeAnswers() {
@@ -519,6 +571,10 @@ function gradeAnswers() {
 		return;	
 	}
 	if(ready_snap == 2 && !document.getElementById("runningClock").checked) {
+		document.getElementById("answer").innerHTML = wrongHTML
+		return;	
+	}
+	if(ready_snap == 3 && !document.getElementById("freeKickClock").checked) {
 		document.getElementById("answer").innerHTML = wrongHTML
 		return;	
 	}
