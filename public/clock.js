@@ -472,7 +472,7 @@ function generatePlay() {
 			}
 
 			/* Calculating the state of the 40 clock */
-			if((injury_play != null && injury_play.team > 0) || (helmet_play != null && helmet_play.team > 0)) {
+			if(((injury_play != null && injury_play.team > 0) || (helmet_play != null && helmet_play.team > 0)) && ending_play.score != 1) {
 				forty_clock = true
 			} else {
 				forty_clock = false
