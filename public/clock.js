@@ -174,7 +174,7 @@ var endingPlays = [
 	 runoff: 0,
 	 clock: 25,
 	 foul: 0,
-	 start: 0,
+	 start: 1,
 	 cop: 1,
 	 score: 0},
 	 {text: "A22 runs out of bounds short of the line to gain.  ",
